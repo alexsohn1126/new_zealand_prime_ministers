@@ -1,26 +1,25 @@
 #### Preamble ####
-# Purpose: Downloads and saves the data from [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 11 February 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Downloads and saves the data from New Zealand PM Wikipedia page
+# Author: Moohaeng Sohn
+# Date: 3 February, 2024
+# Contact: alex.sohn@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: Download required Libraries
 
 
 #### Workspace setup ####
-library(opendatatoronto)
 library(tidyverse)
-# [...UPDATE THIS...]
+library(rvest)
+library(xml2)
 
 #### Download data ####
-# [...ADD CODE HERE TO DOWNLOAD...]
-
+webscraped_page <-
+  read_html(
+    "https://en.wikipedia.org/wiki/List_of_prime_ministers_of_New_Zealand"
+  )
 
 
 #### Save data ####
-# [...UPDATE THIS...]
-# change the_raw_data to whatever name you assigned when you downloaded it.
-write_csv(the_raw_data, "inputs/data/raw_data.csv") 
+write_html(webscraped_page, "inputs/data/NZ_PM_webscraped_page.html")
 
          

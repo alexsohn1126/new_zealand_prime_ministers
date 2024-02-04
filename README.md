@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository web scrapes data from https://en.wikipedia.org/wiki/List_of_prime_ministers_of_New_Zealand and cleans/converts it to create a table that shows how long each Prime Minsters of New Zealand is alive for.
+This repository web scrapes data from https://en.wikipedia.org/wiki/List_of_prime_ministers_of_New_Zealand and cleans/converts it to create a table that shows how long each Prime Minsters of New Zealand is alive for. The web scraping was performed on Feb 3rd, 2024.
 
 ## File Structure
 
