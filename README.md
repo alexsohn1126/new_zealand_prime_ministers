@@ -9,6 +9,11 @@ This repository web scrapes data from https://en.wikipedia.org/wiki/List_of_prim
 The repo is structured as:
 
 -   `input/data` contains the data sources used in analysis including the raw data.
+-   `input/llm` contains the chat log between ChatGPT 3.5 that was used during this project.
 -   `outputs/data` contains the cleaned dataset that was constructed.
 -   `outputs/paper` contains the files used to generate the paper, including the Quarto document and reference bibliography file, as well as the PDF of the paper. 
 -   `scripts` contains the R scripts used to simulate, download and clean data.
+
+## LLM Usage
+
+LLM, ChatGPT 3.5, was used to write various code for this project. Check `inputs/llm` for a detailed chat log.
