@@ -26,11 +26,12 @@ pm_data <- read.csv(here("outputs/data/cleaned_NZ_PM_data.csv"))
 
 # Findings
 
-In New Zealand, prime ministers (also known as PM) are the leader of the political party which has won the largest share of seats forming the government, and stays in the seat as long as the political party keeps the majority [@McLean_2023]. Though earlier in history of prime ministers, they were given the title "colonial secretary", and later on it was a mix of "premier" and "prime minister"[@McLean_2023]. After 1906, all leaders were assigned the title of prime minister [@McLean_2023]. In this paper, we will include colonial secretaries, and premiers as they served essentially the same role as the prime minister.
+In New Zealand, prime ministers (also known as PM) are the leader of the political party which has won the largest share of seats forming the government, and stays in the seat as long as the political party keeps the majority [@McLean_2023]. Though earlier in the history of prime ministers, they were given the title "colonial secretary", and later on it was a mix of "premier" and "prime minister"[@McLean_2023]. After 1906, all leaders were assigned the title of prime minister [@McLean_2023]. In this paper, we will include colonial secretaries, and premiers as they served essentially the same role as the prime minister.
 
-@Tbl-pm shows a sample of the final dataset that we were able to scrape from Wikipedia page which contained a list of all New Zealand Prime Ministers [@NZ_PM_Wiki]. PMs with no death year is still alive. There were 43 prime ministers in New Zealand as of writing this paper, and we have found that 9 past prime ministers of New Zealand are still alive. We also have learned that the shortest living PM was Norman Kirk, dying after living for 51 years. On the other hand, the longest living prime minister is Jim Bolger, who is currently living for 89 years, and is still alive.
+@Tbl-pm shows a sample of the final dataset that we were able to scrape from the Wikipedia page which contained a list of all New Zealand Prime Ministers [@NZ_PM_Wiki]. PMs with no death year are still alive. There were 43 prime ministers in New Zealand as of writing this paper, and we have found that 9 past prime ministers of New Zealand are still alive. We also have learned that the shortest living PM was Norman Kirk, dying after living for 51 years. On the other hand, the longest living prime minister is Jim Bolger, who is currently living for 89 years, and is still alive.
 
-Dame Jacinda Ardern is the prime minister with the latest birth year in our dataset, being born in 1980. And Henry Sewell was born in 1807, making Henry Sewell the prime minister with the oldest birth year in our dataset. The latest death of a prime minister occured in 2020, when Mike Moore has died, and Henrey Sewell, the first prime minister (called colonial secretary back then), has the oldest death year of 1879.
+
+@Fig-pm-birth-death-years summarizes the data well. The graph layout was inspired by Rohan Alexander [@tellingstories]. This shows Dame Jacinda Ardern is the prime minister with the latest birth year in our dataset, being born in 1980. Henry Sewell was born in 1807, making Henry Sewell the prime minister with the oldest birth year in our dataset. The latest death of a prime minister occurred in 2020, when Mike Moore died, and Henry Sewell, the first prime minister (called colonial secretary back then), has the oldest death year of 1879.
 
 There doesn't seem to be a clear trend between the prime minister's birth year and years lived by the prime minister. @Fig-pm-birthyear-vs-yearslived shows which prime ministers are dead or alive, and how many years they have lived, or has lived so far in case of the PMs who are still alive. It seems like there is very little correlation between the year of birth and the number of years lived. Even ignoring the currently alive prime ministers does not seem to reveal a clear trend between the birth year and years lived.
 
@@ -52,13 +53,40 @@ kable(
 
 ```{r}
 #| echo: false
+#| label: fig-pm-birth-death-years
+#| fig-cap: New Zealand Prime Ministers' Birth and Death Years
+#| fig-height: 7
+
+# Code Inspired by Rohan Alexander (2023)
+pm_data |>
+  mutate(
+    still_alive = if_else(is.na(death_year), "Yes", "No"),
+    death_year = if_else(is.na(death_year), as.integer(2024), death_year)
+  ) |>
+  mutate(prime_minister = as_factor(prime_minister)) |>
+  ggplot(
+    aes(x = birth_year, xend = death_year, y = prime_minister, yend = prime_minister, color = still_alive)
+    ) +
+  geom_segment() +
+  labs(
+    x = "Year of Birth/Death", y = "Prime minister", color = "PM is currently alive"
+    ) +
+  theme_minimal() +
+  scale_color_brewer(palette = "Set1") +
+  theme(legend.position = "bottom")
+  
+```
+
+
+```{r}
+#| echo: false
 #| label: fig-pm-birthyear-vs-yearslived
 #| fig-cap: New Zealand Prime Ministers' Birth Year Versus Years Lived
 
 
 pm_data |>
   mutate(
-    alive = ifelse(is.na(death_year), "Alive", "Dead")
+    alive = ifelse(is.na(death_year), "Yes", "No")
   ) |>
   replace_na(list(death_year = 2024)) |>
   mutate(
@@ -66,14 +94,15 @@ pm_data |>
   ) |>
   # scale_color_manual part inspired by https://stackoverflow.com/a/36013774
   ggplot(aes(x = birth_year, y = years_lived, color = as.factor(alive))) +
-  scale_color_manual(values=c("#00BA38", "#F8766D"))+
+  scale_color_manual(values=c("#F8766D","#00BA38"))+
   geom_point(stat="identity") +
   theme_minimal() +
   labs(
     x = "Birth Year",
     y = "Years Alive",
-    color = "Currently Alive"
-  )
+    color = "PM is currently alive"
+  )+
+  theme(legend.position = "bottom")
   
 ```
 
