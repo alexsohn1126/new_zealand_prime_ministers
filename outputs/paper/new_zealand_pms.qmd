@@ -29,9 +29,8 @@ pm_data <- read.csv(here("outputs/data/cleaned_NZ_PM_data.csv"))
 In New Zealand, prime ministers (also known as PM) are the leader of the political party which has won the largest share of seats forming the government, and stays in the seat as long as the political party keeps the majority [@McLean_2023]. Though earlier in the history of prime ministers, they were given the title "colonial secretary", and later on it was a mix of "premier" and "prime minister"[@McLean_2023]. After 1906, all leaders were assigned the title of prime minister [@McLean_2023]. In this paper, we will include colonial secretaries, and premiers as they served essentially the same role as the prime minister.
 
 @Tbl-pm shows a sample of the final dataset that we were able to scrape from the Wikipedia page which contained a list of all New Zealand Prime Ministers [@NZ_PM_Wiki]. PMs with no death year are still alive. There were 43 prime ministers in New Zealand as of writing this paper, and we have found that 9 past prime ministers of New Zealand are still alive. We also have learned that the shortest living PM was Norman Kirk, dying after living for 51 years. On the other hand, the longest living prime minister is Jim Bolger, who is currently living for 89 years, and is still alive.
-
-
-@Fig-pm-birth-death-years summarizes the data well. The graph layout was inspired by Rohan Alexander [@tellingstories]. This shows Dame Jacinda Ardern is the prime minister with the latest birth year in our dataset, being born in 1980. Henry Sewell was born in 1807, making Henry Sewell the prime minister with the oldest birth year in our dataset. The latest death of a prime minister occurred in 2020, when Mike Moore died, and Henry Sewell, the first prime minister (called colonial secretary back then), has the oldest death year of 1879.
+  
+@Fig-pm-birth-death-years summarizes the data well. The graph layout and code was inspired by Rohan Alexander [@tellingstories]. This shows Dame Jacinda Ardern is the prime minister with the latest birth year in our dataset, being born in 1980. Henry Sewell was born in 1807, making Henry Sewell the prime minister with the oldest birth year in our dataset. The latest death of a prime minister occurred in 2020, when Mike Moore died, and Henry Sewell, the first prime minister (called colonial secretary back then), has the oldest death year of 1879.
 
 There doesn't seem to be a clear trend between the prime minister's birth year and years lived by the prime minister. @Fig-pm-birthyear-vs-yearslived shows which prime ministers are dead or alive, and how many years they have lived, or has lived so far in case of the PMs who are still alive. It seems like there is very little correlation between the year of birth and the number of years lived. Even ignoring the currently alive prime ministers does not seem to reveal a clear trend between the birth year and years lived.
 
@@ -57,7 +56,7 @@ kable(
 #| fig-cap: New Zealand Prime Ministers' Birth and Death Years
 #| fig-height: 7
 
-# Code Inspired by Rohan Alexander (2023)
+# Code mainly from Rohan Alexander (2023)
 pm_data |>
   mutate(
     still_alive = if_else(is.na(death_year), "Yes", "No"),
@@ -109,7 +108,7 @@ pm_data |>
 
 # Data Source
 
-Once we got the HTML data from Wikipedia, we were able to use the rvest [@rvest] package to select the column that we are concerned about. Then, once we got that column, we had to parse the raw string data and convert it into useful data that we want. Using regex and tidyverse [@tidyverse] functions, I was able to extract the information we want from the table that was in the Wikipedia page, and save it as a csv file. There were 2 tables which contained information about New Zealand prime ministers, we had to create 2 tables and then combine them back into one before saving it as a csv file.
+Once we got the HTML data from Wikipedia, we were able to use the rvest [@rvest] package to select the column that we are concerned about. Then, once we got that column, we had to parse the raw string data and convert it into useful data that we want. Using regex and tidyverse [@tidyverse] functions, we were able to extract the information we want from the table that was in the Wikipedia page, and save it as a csv file. There were 2 tables which contained information about New Zealand prime ministers, we had to create 2 tables and then combine them back into one before saving it as a csv file.
 
 The longest part of web scraping was when we were converting raw strings into different data we want. To get the name of each PM, we had to write a regex (regular expression) to match patterns within the string which allowed us to extract the data, but there were many edge cases. We couldn't get the first 2 words of each raw string as a lot of them included "The Honourable" or "The Right Honourable", so we removed them with tidyverse [@tidyverse] functions from every row. But still, getting the first 2 words of the new string meant that PMs with 3 word names such as "Dame Jenny Shipley" would not be correctly selected. We noticed that the last name of a PM was appended by their titles, such as KCMG or GCMG. Therefore we would get whatever comes before the title of those PMs, and that worked decently. It was hard to learn and test these regular expressions as they are not intuitive for people just learning them.
 
